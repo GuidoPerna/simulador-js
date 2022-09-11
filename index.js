@@ -1,18 +1,18 @@
 
-const suma = (num1, num2, num3) => {return num1 + num2 + num3}
+const suma = (num1, num2, num3) => { return num1 + num2 + num3 }
 
 
-class Producto{
-    constructor(nombre, precio, cantidad){
+class Producto {
+    constructor(nombre, precio, cantidad) {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
         this.vendido = false;
     }
 
-    // vender(){
-    //     this.cantidad = this.cantidad -1;
-    // }
+    vender() {
+        this.cantidad = this.cantidad - 1;
+    }
 }
 
 let productoUno = new Producto("Producto Uno", 100, 10);
@@ -30,11 +30,16 @@ let Inventario = [productoUno, productoDos, productoTres];
 let pocoStock = Inventario.filter((item) => item.cantidad < 14);
 console.table(pocoStock);
 
+// Inventario.sort((a, b) => a.cantidad - b.cantidad);
+// console.table(Inventario)
+
 let pedido = alert("Seleccione al menos un producto");
 
-let carrito = prompt("Seleccione entre 1, 2 o 3");
+function carrito(){
+    
+let compra = prompt("Seleccione entre 1, 2 o 3");
 
-switch(carrito){
+switch (compra) {
     case "1":
         alert(suma(total, total, Inventario[0].precio));
         break;
@@ -42,24 +47,24 @@ switch(carrito){
     case "2":
         alert(suma(total, total, Inventario[1].precio));
         break;
-    
+
     case "3":
         alert(suma(total, total, Inventario[2].precio));
         break;
 
-    case"1 2":
+    case "1 2":
         alert(suma(total, Inventario[0].precio, Inventario[1].precio));
         break;
 
-    case"1 3":
+    case "1 3":
         alert(suma(total, Inventario[0].precio, Inventario[2].precio));
         break;
 
-    case"2 3":
+    case "2 3":
         alert(suma(total, Inventario[1].precio, Inventario[2].precio));
         break;
 
-    case"1 2 3":
+    case "1 2 3":
         alert(suma(Inventario[0].precio, Inventario[1].precio, Inventario[2].precio));
         break;
 
@@ -67,59 +72,27 @@ switch(carrito){
         alert("Debe ingresar un producto");
         break;
 }
+}
 
+carrito();
 
 let respuesta = prompt("Completaste tu pedido?");
 
-if(respuesta.toLowerCase() != "si"){
+if (respuesta.toLowerCase() != "si") {
     alert("Realiza tu pedido nuevamente ");
-}else{
+} else {
     alert("Pedido cargado");
 };
 
-while(respuesta != "si"){
-    pedido = alert("Seleccione al menos un producto");
-    carrito = prompt("Seleccione entre 1, 2 o 3");
+while (respuesta.toLowerCase() != "si") {
+    let pedido = alert("Seleccione al menos un producto");
+    carrito ();
 
-    switch(carrito){
-        case "1":
-            alert(suma(total, total, productoUno.precio));
-            break;
-    
-        case "2":
-            alert(suma(total, total, productoDos.precio));
-            break;
-        
-        case "3":
-            alert(suma(total, total, productoTres.precio));
-            break;
-    
-        case"1 2":
-            alert(suma(total, productoUno.precio, productoDos.precio));
-            break;
-    
-        case"1 3":
-            alert(suma(total, productoUno.precio, productoTres.precio));
-            break;
-    
-        case"2 3":
-            alert(suma(total, productoDos.precio, productoTres.precio));
-            break;
-    
-        case"1 2 3":
-            alert(suma(productoUno.precio, productoDos.precio, productoTres.precio));
-            break;
-    
-        default:
-            alert("Debe ingresar un producto");
-            break;
-    }
-    
     respuesta = prompt("Completaste tu pedido?");
 
-    if(respuesta.toLowerCase() != "si"){
+    if (respuesta.toLowerCase() != "si") {
         alert("Realiza tu pedido nuevamente ");
-    }else{
+    } else {
         alert("Pedido cargado");
     };
 }
