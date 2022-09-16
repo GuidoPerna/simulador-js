@@ -33,9 +33,16 @@ let Inventario = [productoUno, productoDos, productoTres];
 // Inventario.sort((a, b) => a.cantidad - b.cantidad);
 // console.table(Inventario)
 
-let pedido = alert("Seleccione al menos un producto");
+// let pedido = alert("Seleccione al menos un producto");
 
 let Carrito = [];
+
+function agregarAlCarrito(){
+    x.vender();
+    Carrito.push(x);
+    alert(`Agregaste el ${Inventario[x].nombre} al carrito`);
+    console.log(Carrito);
+};
 
 function restarProdUno(){
     productoUno.vender();
@@ -73,65 +80,65 @@ function reinicio(){
 let botonReinicio = document.getElementById("botonReinicio");
 botonReinicio.addEventListener("click", reinicio);
 
-function opciones(){
+// function opciones(){
     
-let compra = prompt("Seleccione entre 1, 2 o 3");
+// let compra = prompt("Seleccione entre 1, 2 o 3");
 
-switch (compra) {
-    case "1":
-        alert(suma(total, total, Inventario[0].precio));
-        break;
+// switch (compra) {
+//     case "1":
+//         alert(suma(total, total, Inventario[0].precio));
+//         break;
 
-    case "2":
-        alert(suma(total, total, Inventario[1].precio));
-        break;
+//     case "2":
+//         alert(suma(total, total, Inventario[1].precio));
+//         break;
 
-    case "3":
-        alert(suma(total, total, Inventario[2].precio));
-        break;
+//     case "3":
+//         alert(suma(total, total, Inventario[2].precio));
+//         break;
 
-    case "1 2":
-        alert(suma(total, Inventario[0].precio, Inventario[1].precio));
-        break;
+//     case "1 2":
+//         alert(suma(total, Inventario[0].precio, Inventario[1].precio));
+//         break;
 
-    case "1 3":
-        alert(suma(total, Inventario[0].precio, Inventario[2].precio));
-        break;
+//     case "1 3":
+//         alert(suma(total, Inventario[0].precio, Inventario[2].precio));
+//         break;
 
-    case "2 3":
-        alert(suma(total, Inventario[1].precio, Inventario[2].precio));
-        break;
+//     case "2 3":
+//         alert(suma(total, Inventario[1].precio, Inventario[2].precio));
+//         break;
 
-    case "1 2 3":
-        alert(suma(Inventario[0].precio, Inventario[1].precio, Inventario[2].precio));
-        break;
+//     case "1 2 3":
+//         alert(suma(Inventario[0].precio, Inventario[1].precio, Inventario[2].precio));
+//         break;
 
-    default:
-        alert("Debe ingresar un producto");
-        break;
-}
-}
+//     default:
+//         alert("Debe ingresar un producto");
+//         break;
+// }
+// }
 
-opciones();
+// opciones();
 
-let respuesta = prompt("Completaste tu pedido?");
+// let respuesta = prompt("Completaste tu pedido?");
 
-if (respuesta.toLowerCase() != "si") {
-    alert("Realiza tu pedido nuevamente ");
-} else {
-    alert("Pedido cargado");
-};
+// if (respuesta.toLowerCase() != "si") {
+//     alert("Realiza tu pedido nuevamente ");
+// } else {
+//     alert("Pedido cargado");
+// };
 
-while (respuesta.toLowerCase() != "si") {
-    let pedido = alert("Seleccione al menos un producto");
-    opciones ();
+// while (respuesta.toLowerCase() != "si") {
+//     let pedido = alert("Seleccione al menos un producto");
+//     opciones ();
 
-    respuesta = prompt("Completaste tu pedido?");
+//     respuesta = prompt("Completaste tu pedido?");
 
-    if (respuesta.toLowerCase() != "si") {
-        alert("Realiza tu pedido nuevamente ");
-    } else {
-        alert("Pedido cargado");
-    };
-}
+//     if (respuesta.toLowerCase() != "si") {
+//         alert("Realiza tu pedido nuevamente ");
+//     } else {
+//         alert("Pedido cargado");
+//     };
+// }
 
