@@ -37,12 +37,12 @@ let Inventario = [productoUno, productoDos, productoTres];
 
 let Carrito = [];
 
-function agregarAlCarrito(){
-    x.vender();
-    Carrito.push(x);
-    alert(`Agregaste el ${Inventario[x].nombre} al carrito`);
-    console.log(Carrito);
-};
+// const agregarAlCarrito = x => {
+//     x.vender();
+//     Carrito.push(x);
+//     alert(`Agregaste el ${(Inventario[x])}`);
+//     return console.log(Carrito);
+// };
 
 function restarProdUno(){
     productoUno.vender();
