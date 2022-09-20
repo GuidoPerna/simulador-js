@@ -37,9 +37,11 @@ let Inventario = [productoUno, productoDos, productoTres];
 
 let Carrito = [];
 
+const restar = (x) => {return Inventario[x].cantidad -1}
+
 function restarProd(x){
-    x.vender();
     Carrito.push(x);
+    x.vender();
     return console.log(Carrito);
 }
 
