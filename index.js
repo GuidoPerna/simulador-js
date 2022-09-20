@@ -37,40 +37,24 @@ let Inventario = [productoUno, productoDos, productoTres];
 
 let Carrito = [];
 
-// const agregarAlCarrito = x => {
-//     x.vender();
-//     Carrito.push(x);
-//     alert(`Agregaste el ${(Inventario[x])}`);
-//     return console.log(Carrito);
-// };
-
-function restarProdUno(){
-    productoUno.vender();
-    Carrito.push(productoUno);
-    alert("Agregaste el Producto Uno al carrito");
-    console.log(Carrito);
+function restarProd(x){
+    x.vender();
+    Carrito.push(x);
+    return console.log(Carrito);
 }
-let boton1 = document.getElementById("boton1");
-let evento = "click";
-boton1.addEventListener("click", restarProdUno);
 
-function restarProdDos(){
-    productoDos.vender();
-    Carrito.push(productoDos);
-    alert("Agregaste el Producto Dos al carrito");
-    console.log(Carrito);
-}
-let boton2 = document.getElementById("boton2");
-boton2.addEventListener("click", restarProdDos);
+let contenedor = document.getElementById("listaDeProductos");
 
-function restarProdTres(){
-    productoTres.vender();
-    Carrito.push(productoTres);
-    alert("Agregaste el Producto Tres al carrito");
-    console.log(Carrito);
+for(const items of Inventario){ 
+    let div = document.createElement("div");
+    div.innerHTML = `<h3>Producto: ${items.nombre}</h3>
+                    <p>Precio: $${items.precio}</p>
+                    <button id="agregar${items.nombre}">Agregar</button>`;
+
+    contenedor.append(div);
+    let boton = document.getElementById(`agregar${items.nombre}`);
+    boton.addEventListener("click", () => restarProd(items));
 }
-let boton3 = document.getElementById("boton3");
-boton3.addEventListener("click", restarProdTres);
 
 function reinicio(){
     Carrito.splice(0, 50);
