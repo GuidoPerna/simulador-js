@@ -7,13 +7,13 @@ class Producto {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
-        this.vendido = false;
+        // this.vendido = false;
     }
 
-    vender() {
-        this.vendido = true;
-        this.cantidad = this.cantidad - 1;
-    }
+    // vender() {
+    //     this.vendido = true;
+    //     this.cantidad = this.cantidad - 1;
+    // }
 }
 
 let productoUno = new Producto("Producto Uno", 100, 10);
@@ -37,12 +37,14 @@ let Inventario = [productoUno, productoDos, productoTres];
 
 let Carrito = [];
 
-const restar = (x) => {return Inventario[x].cantidad -1}
+function restarCantidad(x){
+    Carrito[x].cantidad -1;
+}
 
-function restarProd(x){
+function agregarAlCarrito(x){
     Carrito.push(x);
-    x.vender();
-    return console.log(Carrito);
+    // restarStock();
+    console.log(Carrito);
 }
 
 let contenedor = document.getElementById("listaDeProductos");
@@ -55,7 +57,7 @@ for(const items of Inventario){
 
     contenedor.append(div);
     let boton = document.getElementById(`agregar${items.nombre}`);
-    boton.addEventListener("click", () => restarProd(items));
+    boton.addEventListener("click", () => agregarAlCarrito(items));
 }
 
 function reinicio(){
@@ -65,6 +67,17 @@ function reinicio(){
 }
 let botonReinicio = document.getElementById("botonReinicio");
 botonReinicio.addEventListener("click", reinicio);
+
+const guardar = (x, y) => {localStorage.setItem(x, y)};
+
+for(const item of Carrito){
+    guardar(Carrito, JSON.stringify(item));
+}
+
+localStorage.setItem("Inventario", JSON.stringify(Carrito));
+
+let carritoParse = JSON.parse(localStorage.getItem("Carrito"));
+
 
 // function opciones(){
     
