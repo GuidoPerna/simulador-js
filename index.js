@@ -62,11 +62,27 @@ for(const items of Inventario){
 
 function reinicio(){
     Carrito.splice(0, 50);
-    alert("Carrito eliminado");
     console.log(Carrito);
 }
 let botonReinicio = document.getElementById("botonReinicio");
-botonReinicio.addEventListener("click", reinicio);
+botonReinicio.addEventListener("click", () => Swal.fire({
+    title: 'Quieres vaciar el carrito?',
+    text: "Tendras que iniciar tu pedido nuevamente!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Borrar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire(
+        'El carrito ha sido vaciado!',
+        'Puedes iniciar tu pedido nuevamente.',
+        'success'
+      )
+      reinicio();
+    }
+  }));
 
 const guardar = (x, y) => {localStorage.setItem(x, y)};
 
@@ -77,6 +93,24 @@ for(const item of Carrito){
 localStorage.setItem("Inventario", JSON.stringify(Carrito));
 
 let carritoParse = JSON.parse(localStorage.getItem("Carrito"));
+
+// Swal.fire({
+//     title: 'Are you sure?',
+//     text: "You won't be able to revert this!",
+//     icon: 'warning',
+//     showCancelButton: true,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//     confirmButtonText: 'Yes, delete it!'
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       Swal.fire(
+//         'Deleted!',
+//         'Your file has been deleted.',
+//         'success'
+//       )
+//     }
+//   })
 
 
 // function opciones(){
