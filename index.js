@@ -23,10 +23,6 @@ let total = 0;
 
 let Inventario = [productoUno, productoDos, productoTres];
 
-// for(const item of Inventario){
-//     console.log(item);
-// };
-
 // let pocoStock = Inventario.filter((item) => item.cantidad < 14);
 // console.table(pocoStock);
 
@@ -94,24 +90,23 @@ localStorage.setItem("Inventario", JSON.stringify(Carrito));
 
 let carritoParse = JSON.parse(localStorage.getItem("Carrito"));
 
-// Swal.fire({
-//     title: 'Are you sure?',
-//     text: "You won't be able to revert this!",
-//     icon: 'warning',
-//     showCancelButton: true,
-//     confirmButtonColor: '#3085d6',
-//     cancelButtonColor: '#d33',
-//     confirmButtonText: 'Yes, delete it!'
-//   }).then((result) => {
-//     if (result.isConfirmed) {
-//       Swal.fire(
-//         'Deleted!',
-//         'Your file has been deleted.',
-//         'success'
-//       )
-//     }
-//   })
+let contenedorDos = document.getElementById("productosData");
 
+fetch("./data.json")
+.then(response => response.json())
+.then(data => {
+  data.forEach(element => {
+    let div = document.createElement("div");
+    div.innerHTML = `
+    <h3>Producto: ${element.nombre}</h3>
+    <p>Precio: $${element.precio}</p>
+    <button id="agregar${element.nombre}">Agregar</button>
+    `;
+    productosData.append(div);
+    let boton = document.getElementById(`agregar${element.nombre}`);
+    boton.addEventListener("click", () => agregarAlCarrito(element))
+  });
+})
 
 // function opciones(){
     
