@@ -1,19 +1,10 @@
 
-const suma = (num1, num2, num3) => { return num1 + num2 + num3 }
-
-
 class Producto {
     constructor(nombre, precio, cantidad) {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
-        // this.vendido = false;
-    }
-
-    // vender() {
-    //     this.vendido = true;
-    //     this.cantidad = this.cantidad - 1;
-    // }
+        }
 }
 
 let productoUno = new Producto("Producto Uno", 100, 10);
@@ -23,43 +14,67 @@ let total = 0;
 
 let Inventario = [productoUno, productoDos, productoTres];
 
-// let pocoStock = Inventario.filter((item) => item.cantidad < 14);
-// console.table(pocoStock);
+let carrito = [];
 
-// Inventario.sort((a, b) => a.cantidad - b.cantidad);
-// console.table(Inventario)
 
-// let pedido = alert("Seleccione al menos un producto");
+// function agregarAlCarrito(x){
+//     Carrito.push(x);
+//     // restarStock();
+//     console.log(Carrito);
+// }
 
-let Carrito = [];
-
-function restarCantidad(x){
-    Carrito[x].cantidad -1;
-}
-
-function agregarAlCarrito(x){
-    Carrito.push(x);
-    // restarStock();
-    console.log(Carrito);
-}
-
-let contenedor = document.getElementById("listaDeProductos");
-
-for(const items of Inventario){ 
+const traerDatos = async () => {
+  const respuesta = await fetch("./data.json");
+  const data = await respuesta.json();
+  data.forEach(element => {
     let div = document.createElement("div");
-    div.innerHTML = `<h3>Producto: ${items.nombre}</h3>
-                    <p>Precio: $${items.precio}</p>
-                    <button id="agregar${items.nombre}">Agregar</button>`;
+    div.innerHTML = `
+     <h3>Producto: ${element.nombre}</h3>
+     <p>Precio: $${element.precio}</p>
+     <button id="agregar${element.nombre}">Agregar</button>
+     `;
+    productosData.append(div);
 
-    contenedor.append(div);
-    let boton = document.getElementById(`agregar${items.nombre}`);
-    boton.addEventListener("click", () => agregarAlCarrito(items));
+    let boton = document.getElementById(`agregar${element.nombre}`);
+    boton.addEventListener("click", () => {
+      agregarAlCarrito(element.id);
+      alert(`Se agregó el ${element.nombre}`)
+    })
+  });
 }
+
+traerDatos();
+
+const agregarAlCarrito = (productoId) => {
+
+  const contenedorCarrito = document.getElementById("carritoContenedor");
+
+  const renderCarrito = async () => {
+    const objeto = await fetch("./data.json");
+    const info = await objeto.json();
+    info.find(item => item.id == productoId)
+        carrito.push(objeto);
+        console.log(carrito);
+        objeto.cantidad = 1
+
+        let div = document.createElement("div")
+        div.classList.add("productoEnCarrito")
+        div.innerHTML = `<p>${info.nombre}</p>
+      <p>Precio: ${info.precio}</p> 
+      <p id="cantidad${info.id}">Cantidad: ${info.cantidad}</p>
+      <button id="eliminar${info.id}" class="boton-eliminar" >Reinicar carrito</button>`;
+        contenedorCarrito.appendChild(div)
+      }
+      renderCarrito();
+  }
+  
+
 
 function reinicio(){
-    Carrito.splice(0, 50);
-    console.log(Carrito);
+  carrito.splice(0, 50);
+  console.log(carrito);
 }
+
 let botonReinicio = document.getElementById("botonReinicio");
 botonReinicio.addEventListener("click", () => Swal.fire({
     title: 'Quieres vaciar el carrito?',
@@ -82,31 +97,17 @@ botonReinicio.addEventListener("click", () => Swal.fire({
 
 const guardar = (x, y) => {localStorage.setItem(x, y)};
 
-for(const item of Carrito){
-    guardar(Carrito, JSON.stringify(item));
+for(const item of carrito){
+    guardar(carrito, JSON.stringify(item));
 }
 
-localStorage.setItem("Inventario", JSON.stringify(Carrito));
+localStorage.setItem("Inventario", JSON.stringify(carrito));
 
-let carritoParse = JSON.parse(localStorage.getItem("Carrito"));
+let carritoParse = JSON.parse(localStorage.getItem("carrito"));
 
 let contenedorDos = document.getElementById("productosData");
 
-fetch("./data.json")
-.then(response => response.json())
-.then(data => {
-  data.forEach(element => {
-    let div = document.createElement("div");
-    div.innerHTML = `
-    <h3>Producto: ${element.nombre}</h3>
-    <p>Precio: $${element.precio}</p>
-    <button id="agregar${element.nombre}">Agregar</button>
-    `;
-    productosData.append(div);
-    let boton = document.getElementById(`agregar${element.nombre}`);
-    boton.addEventListener("click", () => agregarAlCarrito(element))
-  });
-})
+
 
 // function opciones(){
     
