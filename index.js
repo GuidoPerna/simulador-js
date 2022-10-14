@@ -1,113 +1,156 @@
 
+/**
+ * La clase para cada producto, por defecto se crea con una sola cantidad.
+ */
 class Producto {
-    constructor(nombre, precio, cantidad) {
+    constructor(nombre, precio, cantidad = 1) {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
-        }
+    }
 }
 
-let productoUno = new Producto("Producto Uno", 100, 10);
-let productoDos = new Producto("Producto Dos", 250, 20);
-let productoTres = new Producto("Producto Tres", 300, 15);
-let total = 0;
 
-let Inventario = [productoUno, productoDos, productoTres];
-
+/**
+ *  Variables Globales
+ */
 let carrito = [];
 
 
-// function agregarAlCarrito(x){
-//     Carrito.push(x);
-//     // restarStock();
-//     console.log(Carrito);
-// }
-
-const traerDatos = async () => {
-  const respuesta = await fetch("./data.json");
-  const data = await respuesta.json();
-  data.forEach(element => {
-    let div = document.createElement("div");
-    div.innerHTML = `
-     <h3>Producto: ${element.nombre}</h3>
-     <p>Precio: $${element.precio}</p>
-     <button id="agregar${element.nombre}">Agregar</button>
-     `;
-    productosData.append(div);
-
-    let boton = document.getElementById(`agregar${element.nombre}`);
-    boton.addEventListener("click", () => {
-      agregarAlCarrito(element.id);
-      alert(`Se agregó el ${element.nombre}`)
-    })
-  });
-}
-
-traerDatos();
-
-const agregarAlCarrito = (productoId) => {
-
-  const contenedorCarrito = document.getElementById("carritoContenedor");
-
-  const renderCarrito = async () => {
-    const objeto = await fetch("./data.json");
-    const info = await objeto.json();
-    info.find(item => item.id == productoId)
-        carrito.push(objeto);
-        console.log(carrito);
-        objeto.cantidad = 1
-
-        let div = document.createElement("div")
-        div.classList.add("productoEnCarrito")
-        div.innerHTML = `<p>${info.nombre}</p>
-      <p>Precio: ${info.precio}</p> 
-      <p id="cantidad${info.id}">Cantidad: ${info.cantidad}</p>
-      <button id="eliminar${info.id}" class="boton-eliminar" >Reinicar carrito</button>`;
-        contenedorCarrito.appendChild(div)
-      }
-      renderCarrito();
-  }
-  
+/**
+ * Evento que se dispara cuando ya se cargó toda la pagina
+ */
+window.addEventListener('load', async (event) => {
+    readStorage();
+    renderAllInventario();
+    renderAllCarrito();
+});
 
 
-function reinicio(){
-  carrito.splice(0, 50);
-  console.log(carrito);
-}
 
-let botonReinicio = document.getElementById("botonReinicio");
-botonReinicio.addEventListener("click", () => Swal.fire({
-    title: 'Quieres vaciar el carrito?',
-    text: "Tendras que iniciar tu pedido nuevamente!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Borrar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire(
-        'El carrito ha sido vaciado!',
-        'Puedes iniciar tu pedido nuevamente.',
-        'success'
-      )
-      reinicio();
+/**
+ * Leer el archivo que tiene el inventario lo devuelve
+ * @returns Array de Productos
+ */
+ const getInventory = async () => {
+    try {
+        const respuesta = await fetch("./inventario.json");
+        return respuesta.json();
+    } catch (error) {
+        console.log('Error al cargar inventario:', error)
     }
-  }));
-
-const guardar = (x, y) => {localStorage.setItem(x, y)};
-
-for(const item of carrito){
-    guardar(carrito, JSON.stringify(item));
 }
 
-localStorage.setItem("Inventario", JSON.stringify(carrito));
+/**
+ * Si el producto ya existe en el carrito devuelve su index. Caso contrario, devuelve -1
+ */
+const findProductoEnCarrito = (idProducto) => {
+    return carrito.findIndex( item => item.id === idProducto );
+}
 
-let carritoParse = JSON.parse(localStorage.getItem("carrito"));
+const agregarAlCarrito = async (idProducto) => {
+    const inventario = await getInventory();
+    const itemInventario = inventario.find(item => item.id === idProducto); // Busco en el inventario
+    const busquedaEnCarrito = findProductoEnCarrito(idProducto); // Busco en carrito
 
-let contenedorDos = document.getElementById("productosData");
+    if (  busquedaEnCarrito > -1 ) {
+        ++carrito[busquedaEnCarrito].cantidad; // Ya existe, le sumo uno
+    } else {
+        const nuevo = { ...itemInventario, cantidad: 1 };
+        carrito.push( nuevo ); // Agrego uno nuevo
+    }
+    renderAllCarrito(); // Redibuja todo el carrito en pantalla
 
+    saveToStorage(); // Guardar todo el carrito en el storage
 
+    Swal.fire({
+        icon: 'success',
+        position: 'top',
+        title: `Se agregó un "${itemInventario.nombre}"`,
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+    });
+}
+
+const renderAllInventario = async () => {
+    const containerInventario = document.getElementById("containerInventario");
+    containerInventario.innerHTML = '';
+    const data = await getInventory();
+
+    data.forEach(element => {
+        const producto = document.createElement("li");
+        producto.innerHTML = `
+            <span> ${element.cantidad} </span>
+            <i> "${element.nombre?.toUpperCase()}" </i>
+            <strong> $${element.precio} </strong>
+            <button class="btn btn-success btn-sm ms-3" id="agregar${element.nombre}">Agregar</button>
+        `;
+        producto.classList.add('mt-1');
+        containerInventario.append(producto);
+
+        const boton = document.getElementById(`agregar${element.nombre}`);
+        boton.addEventListener("click", () => agregarAlCarrito(element.id) )
+    });
+}
+
+const renderAllCarrito = () => {
+    const contenedorCarrito = document.getElementById("containerCarrito");
+    contenedorCarrito.innerHTML = ''; // Limpio el contendor
+    carrito.forEach( el => {
+        const item = document.createElement("li")
+        item.classList.add("containerCarrito")
+        item.innerHTML = `
+            <span> ${el.cantidad} </span>
+            <span> "${el.nombre}" </span>
+            <strong> $${el.precio}</strong>
+            <strong> ░ Total: $ ${el.precio * el.cantidad} ░ </strong>
+            <button id="eliminar${el.id}" class="btn btn-danger btn-sm" >Quitar</button>
+        `;
+        contenedorCarrito.appendChild(item);
+    });
+}
+
+const limpiarCarrito = () => {
+    carrito = [];
+    renderAllCarrito();
+    clearStorage();
+}
+
+const botonReinicio = document.getElementById("botonReinicio");
+botonReinicio.addEventListener("click", () =>
+    Swal.fire({
+        title: 'Quieres vaciar el carrito?',
+        text: "Tendras que iniciar tu pedido nuevamente!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Borrar'
+    }).then( (result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                'El carrito ha sido vaciado!',
+                'Puedes iniciar tu pedido nuevamente.',
+                'success'
+            )
+            limpiarCarrito();
+        }
+    })
+);
+
+const saveToStorage = () => {
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+const readStorage = () => {
+    const storageCarrito = localStorage.getItem('carrito');
+    carrito = storageCarrito ? JSON.parse(storageCarrito) : [];
+}
+
+const clearStorage = () => {
+    localStorage.removeItem('carrito');
+}
 
 // function opciones(){
     

@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "nombre": "Mouse",
+        "precio": 230,
+        "cantidad": 10
+    },
+    {
+        "id": 2,
+        "nombre": "Monitor",
+        "precio": 2250,
+        "cantidad": 20
+    },
+    {
+        "id": 3,
+        "nombre": "Teclado",
+        "precio": 550,
+        "cantidad": 15
+    },
+    {
+        "id": 4,
+        "nombre": "DVD/RW",
+        "precio": 40,
+        "cantidad": 150
+    }
+]
