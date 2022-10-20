@@ -27,19 +27,15 @@ window.addEventListener('load', async (event) => {
 });
 
 
+const getInventory = () => {
+    return new Promise( (resolve, reject) => {
+        setTimeout( async () => { 
+        const respuesta = await fetch("./inventario.json").catch(reject);
+        resolve(respuesta.json());
+        }, 1000)
+    })
+};
 
-/**
- * Leer el archivo que tiene el inventario lo devuelve
- * @returns Array de Productos
- */
- const getInventory = async () => {
-    try {
-        const respuesta = await fetch("./inventario.json");
-        return respuesta.json();
-    } catch (error) {
-        console.log('Error al cargar inventario:', error)
-    }
-}
 
 /**
  * Si el producto ya existe en el carrito devuelve su index. Caso contrario, devuelve -1
@@ -59,6 +55,29 @@ const agregarAlCarrito = async (idProducto) => {
         const nuevo = { ...itemInventario, cantidad: 1 };
         carrito.push( nuevo ); // Agrego uno nuevo
     }
+    renderAllCarrito(); // Redibuja todo el carrito en pantalla
+
+    saveToStorage(); // Guardar todo el carrito en el storage
+
+    Swal.fire({
+        icon: 'success',
+        position: 'top',
+        title: `Se agregó un "${itemInventario.nombre}"`,
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+    });
+}
+
+const quitarDelCarrito = async (idProducto) => {
+    const inventario = await getInventory();
+    const itemInventario = inventario.find(item => item.id === idProducto); // Busco en el inventario
+    const busquedaEnCarrito = findProductoEnCarrito(idProducto); // Busco en carrito
+
+    if (busquedaEnCarrito > -1) {
+        --carrito[busquedaEnCarrito].cantidad; // Ya existe, le resta uno
+    }
+
     renderAllCarrito(); // Redibuja todo el carrito en pantalla
 
     saveToStorage(); // Guardar todo el carrito en el storage
@@ -108,6 +127,9 @@ const renderAllCarrito = () => {
             <button id="eliminar${el.id}" class="btn btn-danger btn-sm" >Quitar</button>
         `;
         contenedorCarrito.appendChild(item);
+
+        const boton = document.getElementById(`eliminar${el.id}`);
+        boton.addEventListener("click", () => quitarDelCarrito(el.id))
     });
 }
 
