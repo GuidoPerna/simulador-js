@@ -14,6 +14,7 @@ class Producto {
 /**
  *  Variables Globales
  */
+let inventario = [];
 let carrito = [];
 
 
@@ -22,6 +23,7 @@ let carrito = [];
  */
 window.addEventListener('load', async (event) => {
     readStorage();
+    inventario = await getInventory();
     renderAllInventario();
     renderAllCarrito();
 });
@@ -32,7 +34,7 @@ const getInventory = () => {
         setTimeout( async () => { 
         const respuesta = await fetch("./inventario.json").catch(reject);
         resolve(respuesta.json());
-        }, 1000)
+        }, 1500)
     })
 };
 
@@ -45,7 +47,6 @@ const findProductoEnCarrito = (idProducto) => {
 }
 
 const agregarAlCarrito = async (idProducto) => {
-    const inventario = await getInventory();
     const itemInventario = inventario.find(item => item.id === idProducto); // Busco en el inventario
     const busquedaEnCarrito = findProductoEnCarrito(idProducto); // Busco en carrito
 
@@ -70,7 +71,6 @@ const agregarAlCarrito = async (idProducto) => {
 }
 
 const quitarDelCarrito = async (idProducto) => {
-    const inventario = await getInventory();
     const itemInventario = inventario.find(item => item.id === idProducto); // Busco en el inventario
     const busquedaEnCarrito = findProductoEnCarrito(idProducto); // Busco en carrito
 
@@ -94,10 +94,8 @@ const quitarDelCarrito = async (idProducto) => {
 
 const renderAllInventario = async () => {
     const containerInventario = document.getElementById("containerInventario");
-    containerInventario.innerHTML = '';
-    const data = await getInventory();
-
-    data.forEach(element => {
+    containerInventario.innerHTML = ''; // Limpio la pantalla
+    inventario.forEach(element => {
         const producto = document.createElement("li");
         producto.innerHTML = `
             <span> ${element.cantidad} </span>
@@ -115,7 +113,7 @@ const renderAllInventario = async () => {
 
 const renderAllCarrito = () => {
     const contenedorCarrito = document.getElementById("containerCarrito");
-    contenedorCarrito.innerHTML = ''; // Limpio el contendor
+    contenedorCarrito.innerHTML = ''; // Limpio la pantalla
     carrito.forEach( el => {
         const item = document.createElement("li")
         item.classList.add("containerCarrito")
